@@ -1,0 +1,5 @@
+{
+  "welcome": "¡Bienvenido a TypeGlot!",
+  "hello": "¡Hola, {name}!",
+  "items_count": "{count, plural, one {# artículo} other {# artículos}}"
+}

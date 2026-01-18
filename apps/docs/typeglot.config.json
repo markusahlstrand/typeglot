@@ -1,0 +1,11 @@
+{
+  "sourceLocale": "en",
+  "targetLocales": ["es", "de", "sv"],
+  "localesDir": "./locales",
+  "outputDir": "./.vitepress/i18n",
+  "include": [".vitepress/**/*.{ts,mts,vue}", "**/*.vue"],
+  "exclude": ["node_modules", "dist", ".vitepress/cache"],
+  "ai": {
+    "provider": "copilot"
+  }
+}

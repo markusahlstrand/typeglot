@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+out/
+*.vsix
+
+# IDE
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Vite
+.vite/
+
+# VitePress
+apps/docs/.vitepress/cache/
+apps/docs/.vitepress/dist/
+
+# Generated i18n files (optional - you may want to commit these)
+# src/generated/
+
+# Turbo
+.turbo/

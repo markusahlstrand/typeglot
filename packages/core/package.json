@@ -1,0 +1,42 @@
+{
+  "name": "@typeglot/core",
+  "version": "0.1.0",
+  "description": "Core logic for TypeGlot - config parsing, AST analysis, and AI prompting",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "glob": "^10.3.0",
+    "ts-morph": "^21.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  },
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "typescript",
+    "ast",
+    "jsdoc"
+  ],
+  "license": "MIT"
+}

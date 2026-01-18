@@ -1,0 +1,168 @@
+{
+  "name": "typeglot-vscode",
+  "displayName": "TypeGlot",
+  "description": "Git-native internationalization toolchain with inline translation preview and AI-powered translations",
+  "version": "0.1.0",
+  "publisher": "typeglot",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:typeglot.config.json",
+    "workspaceContains:.typeglotrc",
+    "workspaceContains:locales/*.json"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "typeglot.init",
+        "title": "TypeGlot: Initialize Project"
+      },
+      {
+        "command": "typeglot.translateKey",
+        "title": "TypeGlot: Translate Key with AI"
+      },
+      {
+        "command": "typeglot.translateMissingKey",
+        "title": "TypeGlot: Translate Missing Key"
+      },
+      {
+        "command": "typeglot.openDashboard",
+        "title": "TypeGlot: Open Translation Dashboard"
+      },
+      {
+        "command": "typeglot.refreshDecorations",
+        "title": "TypeGlot: Refresh Translation Decorations"
+      },
+      {
+        "command": "typeglot.goToTranslation",
+        "title": "TypeGlot: Go to Translation"
+      },
+      {
+        "command": "typeglot.extractString",
+        "title": "TypeGlot: Extract String to Translation"
+      },
+      {
+        "command": "typeglot.translateAllMissing",
+        "title": "TypeGlot: Translate All Missing Keys"
+      },
+      {
+        "command": "typeglot.showTranslationStatus",
+        "title": "TypeGlot: Show Translation Status"
+      }
+    ],
+    "configuration": {
+      "title": "TypeGlot",
+      "properties": {
+        "typeglot.showInlineTranslations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline translation decorations in the editor"
+        },
+        "typeglot.previewLocale": {
+          "type": "string",
+          "default": "en",
+          "description": "Locale to preview in inline decorations"
+        },
+        "typeglot.aiProvider": {
+          "type": "string",
+          "enum": [
+            "copilot",
+            "openai",
+            "anthropic"
+          ],
+          "default": "copilot",
+          "description": "AI provider for translations (copilot uses VS Code's built-in AI)"
+        },
+        "typeglot.decorationStyle": {
+          "type": "string",
+          "enum": [
+            "inline",
+            "hover",
+            "both"
+          ],
+          "default": "inline",
+          "description": "How to display translation previews"
+        },
+        "typeglot.highlightMissingKeys": {
+          "type": "boolean",
+          "default": true,
+          "description": "Highlight translation keys that are missing from locale files"
+        },
+        "typeglot.autoDetectContext": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically extract JSDoc context for AI translations"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "json",
+        "extensions": [
+          ".json"
+        ],
+        "filenames": []
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "typeglot.translateKey",
+          "when": "editorTextFocus && resourceLangId =~ /typescript|typescriptreact|javascript|javascriptreact/",
+          "group": "typeglot@1"
+        },
+        {
+          "command": "typeglot.extractString",
+          "when": "editorTextFocus && editorHasSelection && resourceLangId =~ /typescript|typescriptreact|javascript|javascriptreact/",
+          "group": "typeglot@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "typeglot.translateMissingKey",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "typeglot.translateKey",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus && resourceLangId =~ /typescript|typescriptreact|javascript|javascriptreact/"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run build",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "package": "vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "@typeglot/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.19.0",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "typescript",
+    "translations",
+    "vscode",
+    "ai"
+  ],
+  "license": "MIT"
+}

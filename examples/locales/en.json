@@ -1,0 +1,8 @@
+{
+  "welcome": "Welcome to TypeGlot!",
+  "hello": "Hello, {name}!",
+  "items_count": "{count, plural, one {# item} other {# items}}",
+  "checkout_now": "Checkout Now",
+  "save_settings": "Save Settings",
+  "profile_updated": "Your profile has been updated successfully."
+}
