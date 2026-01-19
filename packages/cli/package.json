@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsc && pnpm run build:ui",
-    "build:ui": "cp -r ../ui/dist ./ui-dist 2>/dev/null || echo 'UI not built, skipping copy'",
+    "build:ui": "rm -rf ./ui-dist && cp -r ../ui/dist ./ui-dist 2>/dev/null || echo 'UI not built, skipping copy'",
     "dev": "tsc --watch",
     "start": "cd ../.. && node packages/cli/dist/cli.js dev",
     "lint": "eslint src",
