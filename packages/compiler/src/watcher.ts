@@ -38,7 +38,8 @@ export class TranslationWatcher {
     this.watcher.on('add', (filePath: string) => void this.handleChange(filePath, 'added'));
     this.watcher.on('change', (filePath: string) => void this.handleChange(filePath, 'changed'));
     this.watcher.on('unlink', (filePath: string) => void this.handleChange(filePath, 'removed'));
-    this.watcher.on('error', (error: Error) => {
+    this.watcher.on('error', (err: unknown) => {
+      const error = err instanceof Error ? err : new Error(String(err));
       this.options.onError?.(error);
     });
 
