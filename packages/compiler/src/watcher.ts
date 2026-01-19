@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import chokidar from 'chokidar';
+import chokidar, { type FSWatcher } from 'chokidar';
 import { TypeGlotCompiler, CompilerOptions } from './compiler.js';
 
 export interface WatcherOptions extends CompilerOptions {
@@ -12,7 +12,7 @@ export interface WatcherOptions extends CompilerOptions {
  */
 export class TranslationWatcher {
   private compiler: TypeGlotCompiler;
-  private watcher: chokidar.FSWatcher | null = null;
+  private watcher: FSWatcher | null = null;
   private options: WatcherOptions;
 
   constructor(options: WatcherOptions) {
@@ -35,10 +35,10 @@ export class TranslationWatcher {
       ignoreInitial: true,
     });
 
-    this.watcher.on('add', (filePath) => void this.handleChange(filePath, 'added'));
-    this.watcher.on('change', (filePath) => void this.handleChange(filePath, 'changed'));
-    this.watcher.on('unlink', (filePath) => void this.handleChange(filePath, 'removed'));
-    this.watcher.on('error', (error) => {
+    this.watcher.on('add', (filePath: string) => void this.handleChange(filePath, 'added'));
+    this.watcher.on('change', (filePath: string) => void this.handleChange(filePath, 'changed'));
+    this.watcher.on('unlink', (filePath: string) => void this.handleChange(filePath, 'removed'));
+    this.watcher.on('error', (error: Error) => {
       this.options.onError?.(error);
     });
 

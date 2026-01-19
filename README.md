@@ -86,17 +86,43 @@ The JSDoc comment is extracted and sent to the AI for accurate, context-aware tr
 
 ## 💻 Development Mode
 
-Start the development server with file watching and local UI:
+Start the integrated development server with file watching and local dashboard:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
-This will:
+This single command:
 
-- Watch for changes in `locales/*.json`
-- Automatically recompile TypeScript on changes
-- Launch a local dashboard at `http://localhost:3333`
+- Compiles all translation files
+- Watches for changes in `locales/*.json`
+- Automatically recompiles on changes
+- Starts an API server
+- Serves a local dashboard at `http://localhost:3333`
+
+### Dashboard Features
+
+Open `http://localhost:3333` to:
+
+- **View all translations** in an organized table
+- **Add new keys** with the "+ Add Key" button
+- **Edit inline** by clicking any translation cell
+- **Filter by language** to focus on specific locales
+- **Search** for keys or values
+- **See missing translations** highlighted in red
+
+Changes made through the dashboard are immediately saved to your JSON files and trigger automatic recompilation.
+
+### Run Anywhere
+
+TypeGlot works via `npx` - no installation required:
+
+```bash
+cd /path/to/your/project
+npx @typeglot/cli dev
+```
+
+Perfect for trying it out in existing projects or collaborating with teams.
 
 ## 🤖 AI Translation
 

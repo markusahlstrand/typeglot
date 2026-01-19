@@ -37,4 +37,4 @@ jobs:
         run: pnpm test
 
       - name: Build docs
-        run: pnpm docs:build
+        run: pnpm vitepress build

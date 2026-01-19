@@ -10,4 +10,4 @@ pnpm test
 pnpm build
 
 # Build docs to ensure VitePress site works
-pnpm docs:build
+pnpm vitepress build
