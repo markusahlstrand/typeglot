@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import { loadConfig } from '@typeglot/core';
-import { TypeGlotCompiler } from '@typeglot/compiler';
 
 interface TranslateOptions {
   target?: string[];

@@ -43,8 +43,9 @@ export function findTranslationUsages(project: Project, sourceFiles: string[]): 
         const expression = node.getExpression();
         if (Node.isIdentifier(expression) && expression.getText() === 't') {
           const args = node.getArguments();
-          if (args.length > 0 && Node.isStringLiteral(args[0]!)) {
-            const key = args[0].getLiteralValue();
+          const firstArg = args[0];
+          if (firstArg && Node.isStringLiteral(firstArg)) {
+            const key = firstArg.getLiteralValue();
             const { line, column } = sourceFile.getLineAndColumnAtPos(node.getStart());
 
             usages.push({

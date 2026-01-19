@@ -51,7 +51,7 @@ export class TranslationService {
         results.set(targetLocale, translation);
         this.outputChannel.appendLine(`✓ ${targetLocale}: ${translation}`);
       } catch (error) {
-        this.outputChannel.appendLine(`✗ ${targetLocale}: ${error}`);
+        this.outputChannel.appendLine(`✗ ${targetLocale}: ${String(error)}`);
         throw error;
       }
     }
@@ -110,6 +110,10 @@ export class TranslationService {
     }
 
     const model = models[0];
+    if (!model) {
+      throw new Error('Failed to get language model');
+    }
+
     const messages = [vscode.LanguageModelChatMessage.User(prompt)];
 
     try {

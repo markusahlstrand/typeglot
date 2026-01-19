@@ -49,14 +49,14 @@ export abstract class BaseTranslationProvider implements TranslationProvider {
 export class MockTranslationProvider extends BaseTranslationProvider {
   name = 'mock';
 
-  async translate(request: TranslationRequest): Promise<TranslationResult> {
+  translate(request: TranslationRequest): Promise<TranslationResult> {
     // Return a simple mock translation for testing
-    return {
+    return Promise.resolve({
       key: request.message.key,
       sourceValue: request.message.value,
       translatedValue: `[${request.targetLocale}] ${request.message.value}`,
       confidence: 1.0,
       notes: 'Mock translation for testing',
-    };
+    });
   }
 }

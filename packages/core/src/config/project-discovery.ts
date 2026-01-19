@@ -77,7 +77,7 @@ function generateProjectName(workspaceRoot: string, projectPath: string): string
     const pkgPath = path.join(projectPath, 'package.json');
     if (fs.existsSync(pkgPath)) {
       try {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { name?: string };
         if (pkg.name) {
           return pkg.name;
         }
@@ -95,7 +95,7 @@ function generateProjectName(workspaceRoot: string, projectPath: string): string
   const pkgPath = path.join(projectPath, 'package.json');
   if (fs.existsSync(pkgPath)) {
     try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { name?: string };
       if (pkg.name) {
         return pkg.name;
       }

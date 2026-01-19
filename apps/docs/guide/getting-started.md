@@ -95,19 +95,47 @@ const itemText = m.items_count({ count: 5 });
 // → "5 items"
 ```
 
-## Development Mode
+## Development Mode with Dashboard
 
-Start the development server for automatic recompilation:
+Start the development server with the integrated dashboard:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 This will:
 
 1. Watch `locales/*.json` for changes
-2. Automatically recompile TypeScript
-3. Launch the local dashboard at `http://localhost:3333`
+2. Automatically recompile TypeScript on every change
+3. Start an API server
+4. Serve the local dashboard at `http://localhost:3333`
+
+### Using the Dashboard
+
+Open `http://localhost:3333` in your browser to:
+
+- **View all translations** in a table format
+- **Add new keys** with the "+ Add Key" button
+- **Edit translations inline** by clicking any cell
+- **Filter by language** to focus on specific locales
+- **Search** for keys or values
+- **See missing translations** highlighted in red
+
+Changes made through the dashboard are saved directly to your JSON files and trigger automatic recompilation.
+
+## Running Without Installation
+
+You can run TypeGlot in any project folder without installing it:
+
+```bash
+npx @typeglot/cli dev
+```
+
+This makes it easy to:
+
+- Try TypeGlot in existing projects
+- Work on multiple projects without global installations
+- Collaborate with team members (they just run `npx`)
 
 ## Adding Context for AI
 
@@ -126,7 +154,8 @@ const addButton = m.add_to_cart;
 
 ## Next Steps
 
-- Learn about [Translation Files](/guide/translation-files) and supported formats
-- Understand [Type Safety](/guide/type-safety) and generated code
+- Learn about [Development Mode](/guide/development-mode) and the dashboard features
+- Understand [Translation Files](/guide/translation-files) and supported formats
+- Explore [Type Safety](/guide/type-safety) and generated code
 - Set up [AI Translation](/guide/ai-translation) for automated translations
-- Explore [JSDoc Context](/guide/jsdoc-context) for better AI results
+- Learn [JSDoc Context](/guide/jsdoc-context) for better AI results

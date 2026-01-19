@@ -143,7 +143,7 @@
     "vscode:prepublish": "pnpm run build",
     "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
     "watch": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "package": "vsce package --no-dependencies"
@@ -152,9 +152,9 @@
     "@typeglot/core": "workspace:*"
   },
   "devDependencies": {
-    "@types/vscode": "^1.90.0",
-    "esbuild": "^0.19.0",
-    "@vscode/vsce": "^2.22.0"
+    "@types/vscode": "^1.108.1",
+    "esbuild": "^0.27.2",
+    "@vscode/vsce": "^3.7.1"
   },
   "keywords": [
     "i18n",

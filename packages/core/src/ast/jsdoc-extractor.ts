@@ -42,10 +42,8 @@ function findTranslationKeyReferences(sourceFile: Node, key: string): Node[] {
     }
 
     // Check for string literals in function calls like t('key_name')
-    if (Node.isStringLiteral(node)) {
-      if (node.getLiteralValue() === key) {
-        references.push(node);
-      }
+    if (Node.isStringLiteral(node) && node.getLiteralValue() === key) {
+      references.push(node);
     }
   });
 

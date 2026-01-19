@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useProject } from '../context/ProjectContext';
 import { api, type Stats } from '../api/client';
 
@@ -6,6 +7,7 @@ export default function Dashboard() {
   const { currentProject, isLoading: projectLoading } = useProject();
   const [stats, setStats] = useState<Stats>({ totalKeys: 0, languages: 0, missing: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentProject) {
@@ -90,19 +92,27 @@ export default function Dashboard() {
             title="Add New Key"
             description="Create a new translation key"
             action="Add Key"
+            onClick={() => void navigate('/translations?action=add')}
           />
           <ActionCard
             title="AI Translate"
             description="Generate translations using AI"
             action="Translate"
             disabled={stats.missing === 0}
+            onClick={() => alert('AI translation coming soon!')}
           />
           <ActionCard
             title="Add Language"
             description="Add a new target language"
             action="Add Language"
+            onClick={() => void navigate('/settings')}
           />
-          <ActionCard title="Export" description="Export translations to JSON" action="Export" />
+          <ActionCard
+            title="Export"
+            description="Export translations to JSON"
+            action="Export"
+            onClick={() => alert('Export coming soon!')}
+          />
         </div>
       </div>
     </div>
@@ -140,11 +150,13 @@ function ActionCard({
   description,
   action,
   disabled = false,
+  onClick,
 }: {
   title: string;
   description: string;
   action: string;
   disabled?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <div
@@ -163,6 +175,7 @@ function ActionCard({
             : 'bg-primary-500 text-white hover:bg-primary-600'
         }`}
         disabled={disabled}
+        onClick={onClick}
       >
         {action}
       </button>
