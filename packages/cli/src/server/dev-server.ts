@@ -110,7 +110,29 @@ export class DevServer {
         return c.json({ error: 'No project selected' }, 404);
       }
 
-      const localeFile = path.join(project.path, project.config.localesDir, `${locale}.json`);
+      // Validate locale parameter to prevent path traversal
+      if (
+        !locale ||
+        typeof locale !== 'string' ||
+        locale.includes('..') ||
+        locale.includes('/') ||
+        locale.includes('\\')
+      ) {
+        return c.json({ error: 'Invalid locale parameter' }, 400);
+      }
+
+      const localesDir = path.join(project.path, project.config.localesDir);
+      const localeFile = path.join(localesDir, `${locale}.json`);
+
+      // Verify the resolved path is within the locales directory
+      const normalizedLocaleFile = path.normalize(localeFile);
+      const normalizedLocalesDir = path.normalize(localesDir);
+      if (
+        !normalizedLocaleFile.startsWith(normalizedLocalesDir + path.sep) &&
+        normalizedLocaleFile !== normalizedLocalesDir
+      ) {
+        return c.json({ error: 'Invalid locale path' }, 400);
+      }
 
       let translations: Record<string, string> = {};
       if (fs.existsSync(localeFile)) {

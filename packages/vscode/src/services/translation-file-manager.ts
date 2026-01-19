@@ -201,7 +201,7 @@ export class TranslationFileManager {
     const sorted = Object.keys(translations)
       .sort()
       .reduce((acc, key) => {
-        acc[key] = translations[key];
+        acc[key] = translations[key] ?? '';
         return acc;
       }, {} as TranslationFile);
 

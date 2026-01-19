@@ -36,6 +36,10 @@ coverage/
 # VitePress
 apps/docs/.vitepress/cache/
 apps/docs/.vitepress/dist/
+apps/docs/dev/.vitepress/cache/
+apps/docs/dev/.vitepress/dist/
+**/.vitepress/cache/
+**/.vitepress/dist/
 
 # Generated i18n files (optional - you may want to commit these)
 # src/generated/

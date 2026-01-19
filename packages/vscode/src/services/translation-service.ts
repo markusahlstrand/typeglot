@@ -110,6 +110,10 @@ export class TranslationService {
     }
 
     const model = models[0];
+    if (!model) {
+      throw new Error('Failed to get language model');
+    }
+
     const messages = [vscode.LanguageModelChatMessage.User(prompt)];
 
     try {

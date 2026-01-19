@@ -236,20 +236,20 @@ export function extractJSDocFromSource(
 
   // Extract @desc or @description tag
   const descMatch = /@desc(?:ription)?\s+(.+?)(?=\n\s*\*\s*@|\n\s*\*\/|$)/is.exec(jsDocText);
-  if (descMatch) {
+  if (descMatch?.[1]) {
     result.description = descMatch[1].replace(/\n\s*\*\s*/g, ' ').trim();
   }
 
   // Extract @context tag
   const contextMatch = /@context\s+(.+?)(?=\n\s*\*\s*@|\n\s*\*\/|$)/is.exec(jsDocText);
-  if (contextMatch) {
+  if (contextMatch?.[1]) {
     result.context = contextMatch[1].replace(/\n\s*\*\s*/g, ' ').trim();
   }
 
   // If no specific tags, use the main description
   if (!result.description && !result.context) {
     const mainDesc = /\/\*\*\s*\n?\s*\*?\s*([^@*].*?)(?=\n\s*\*\s*@|\n\s*\*\/|$)/is.exec(jsDocText);
-    if (mainDesc) {
+    if (mainDesc?.[1]) {
       result.description = mainDesc[1].replace(/\n\s*\*\s*/g, ' ').trim();
     }
   }

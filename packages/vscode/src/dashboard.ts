@@ -102,8 +102,8 @@ export class DashboardPanel {
       case 'translateKey':
         await vscode.commands.executeCommand(
           'typeglot.translateKey',
-          message.key as string,
-          message.locales as string[]
+          message['key'] as string,
+          message['locales'] as string[]
         );
         break;
 
@@ -112,7 +112,7 @@ export class DashboardPanel {
         break;
 
       case 'openFile': {
-        const locale = message.locale as string;
+        const locale = message['locale'] as string;
         if (this.translationFileManager) {
           const filePath = this.translationFileManager.getLocalePath(locale);
           const doc = await vscode.workspace.openTextDocument(filePath);
@@ -122,8 +122,8 @@ export class DashboardPanel {
       }
 
       case 'copyKey':
-        await vscode.env.clipboard.writeText(message.key as string);
-        vscode.window.showInformationMessage(`Copied "${String(message.key)}" to clipboard`);
+        await vscode.env.clipboard.writeText(message['key'] as string);
+        vscode.window.showInformationMessage(`Copied "${String(message['key'])}" to clipboard`);
         break;
     }
   }
