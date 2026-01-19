@@ -11,10 +11,8 @@
     "typeglot:build": "typeglot build",
     "typeglot:dev": "typeglot dev"
   },
-  "dependencies": {
-    "@typeglot/cli": "workspace:*"
-  },
   "devDependencies": {
+    "@typeglot/cli": "workspace:*",
     "vitepress": "^1.0.0"
   }
 }
