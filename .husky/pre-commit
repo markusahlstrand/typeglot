@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Run lint-staged for staged files
+pnpm exec lint-staged
+
+# Run tests
+pnpm test
+
+# Build packages to ensure everything compiles
+pnpm build
+
+# Build docs to ensure VitePress site works
+pnpm docs:build

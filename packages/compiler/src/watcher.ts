@@ -35,9 +35,9 @@ export class TranslationWatcher {
       ignoreInitial: true,
     });
 
-    this.watcher.on('add', (filePath) => this.handleChange(filePath, 'added'));
-    this.watcher.on('change', (filePath) => this.handleChange(filePath, 'changed'));
-    this.watcher.on('unlink', (filePath) => this.handleChange(filePath, 'removed'));
+    this.watcher.on('add', (filePath) => void this.handleChange(filePath, 'added'));
+    this.watcher.on('change', (filePath) => void this.handleChange(filePath, 'changed'));
+    this.watcher.on('unlink', (filePath) => void this.handleChange(filePath, 'removed'));
     this.watcher.on('error', (error) => {
       this.options.onError?.(error);
     });

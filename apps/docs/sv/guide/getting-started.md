@@ -126,7 +126,7 @@ const addButton = m.add_to_cart;
 
 ## Nästa steg
 
-- Lär dig om [Översättningsfiler](/sv/guide/translation-files) och format som stöds
-- Förstå [Typsäkerhet](/sv/guide/type-safety) och genererad kod
-- Sätt upp [AI-översättning](/sv/guide/ai-translation) för automatiserade översättningar
-- Utforska [JSDoc-kontext](/sv/guide/jsdoc-context) för bättre AI-resultat
+- Lär dig om [Översättningsfiler](/guide/translation-files) och format som stöds
+- Förstå [Typsäkerhet](/guide/type-safety) och genererad kod
+- Sätt upp [AI-översättning](/guide/ai-translation) för automatiserade översättningar
+- Utforska [JSDoc-kontext](/guide/jsdoc-context) för bättre AI-resultat

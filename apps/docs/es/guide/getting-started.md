@@ -126,7 +126,7 @@ const addButton = m.add_to_cart;
 
 ## Próximos Pasos
 
-- Aprende sobre [Archivos de Traducción](/es/guide/translation-files) y formatos soportados
-- Entiende [Seguridad de Tipos](/es/guide/type-safety) y código generado
-- Configura [Traducción con IA](/es/guide/ai-translation) para traducciones automatizadas
-- Explora [Contexto JSDoc](/es/guide/jsdoc-context) para mejores resultados de IA
+- Aprende sobre [Archivos de Traducción](/guide/translation-files) y formatos soportados
+- Entiende [Seguridad de Tipos](/guide/type-safety) y código generado
+- Configura [Traducción con IA](/guide/ai-translation) para traducciones automatizadas
+- Explora [Contexto JSDoc](/guide/jsdoc-context) para mejores resultados de IA
