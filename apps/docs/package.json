@@ -7,12 +7,9 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview",
-    "typeglot:build": "typeglot build",
-    "typeglot:dev": "typeglot dev"
+    "preview": "vitepress preview"
   },
   "devDependencies": {
-    "@typeglot/cli": "workspace:*",
     "vitepress": "^1.0.0"
   }
 }
