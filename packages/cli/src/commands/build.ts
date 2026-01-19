@@ -37,9 +37,9 @@ export async function buildCommand(options: BuildOptions): Promise<void> {
 
     console.log(chalk.dim('\nPress Ctrl+C to stop\n'));
 
-    process.on('SIGINT', async () => {
+    process.on('SIGINT', () => {
       console.log(chalk.yellow('\nStopping...'));
-      await watcher.stop();
+      void watcher.stop();
       process.exit(0);
     });
   } else {

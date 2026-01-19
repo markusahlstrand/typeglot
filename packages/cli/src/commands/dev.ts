@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { discoverProjects, type DiscoveredProject } from '@typeglot/core';
 import { TranslationWatcher } from '@typeglot/compiler';
-import { ApiServer } from '../server/api-server.js';
+import { DevServer } from '../server/dev-server.js';
 
 interface DevOptions {
   port: string;
@@ -76,30 +76,26 @@ export async function devCommand(options: DevOptions): Promise<void> {
 
   await watcher.start();
 
-  // Start the API server
-  const apiPort = parseInt(options.port) + 1; // API on port+1 (e.g., 3334 if UI on 3333)
-  const apiServer = new ApiServer({
-    port: apiPort,
+  // Start the dev server (API + UI)
+  const port = parseInt(options.port);
+  const devServer = new DevServer({
+    port,
     workspaceRoot,
   });
 
-  await apiServer.start();
-  console.log(chalk.cyan(`\n🔌 API server running at http://localhost:${apiPort}`));
+  await devServer.start();
 
-  // Start the UI server if enabled
-  if (options.ui) {
-    console.log(chalk.cyan(`📊 Development UI available at http://localhost:${options.port}`));
-    console.log(chalk.dim(`   API endpoint: http://localhost:${apiPort}`));
-    console.log(chalk.dim('   (Start UI with: cd packages/ui && pnpm dev)'));
-  }
+  console.log(chalk.cyan(`\n🚀 TypeGlot running at http://localhost:${port}`));
+  console.log(chalk.dim(`   Dashboard: http://localhost:${port}`));
+  console.log(chalk.dim(`   API: http://localhost:${port}/api`));
 
   console.log(chalk.dim('\nPress Ctrl+C to stop\n'));
 
   // Handle graceful shutdown
-  process.on('SIGINT', async () => {
+  process.on('SIGINT', () => {
     console.log(chalk.yellow('\nShutting down...'));
-    await watcher.stop();
-    await apiServer.stop();
+    void watcher.stop();
+    devServer.stop();
     process.exit(0);
   });
 }

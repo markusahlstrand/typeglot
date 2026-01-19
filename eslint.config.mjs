@@ -18,6 +18,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/*.js', 'apps/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/*.js', 'apps/**', '**/generated/**'],
   }
 );

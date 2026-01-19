@@ -1,20 +1,33 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useProject } from '../context/ProjectContext';
 import { api, type TranslationEntry } from '../api/client';
 
 export default function Translations() {
   const { currentProject, isLoading: projectLoading } = useProject();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [translations, setTranslations] = useState<TranslationEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedLocale, setSelectedLocale] = useState<string | null>(null);
   const [editingCell, setEditingCell] = useState<{ key: string; locale: string } | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [showAddModal, setShowAddModal] = useState(searchParams.get('action') === 'add');
+  const [newKey, setNewKey] = useState('');
+  const [newValue, setNewValue] = useState('');
 
   // All locales for the current project
   const locales = currentProject
     ? [currentProject.sourceLocale, ...currentProject.targetLocales]
     : [];
+
+  // Handle action query param
+  useEffect(() => {
+    if (searchParams.get('action') === 'add') {
+      setShowAddModal(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     if (currentProject) {
@@ -62,6 +75,25 @@ export default function Translations() {
     setEditValue('');
   };
 
+  const handleAddKey = async () => {
+    if (!newKey.trim() || !currentProject) return;
+
+    try {
+      // Save to source locale
+      await api.saveTranslation(newKey, currentProject.sourceLocale, newValue);
+      // Update local state
+      setTranslations((prev) => [
+        ...prev,
+        { key: newKey, values: { [currentProject.sourceLocale]: newValue } },
+      ]);
+      setShowAddModal(false);
+      setNewKey('');
+      setNewValue('');
+    } catch (error) {
+      console.error('Failed to add key:', error);
+    }
+  };
+
   if (projectLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -82,10 +114,70 @@ export default function Translations() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Translations</h1>
-        <button className="px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-md hover:bg-primary-600 transition-colors"
+        >
           + Add Key
         </button>
       </div>
+
+      {/* Add Key Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Add New Translation Key</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Key</label>
+                <input
+                  type="text"
+                  value={newKey}
+                  onChange={(e) => setNewKey(e.target.value)}
+                  placeholder="e.g., welcome_message"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Value ({currentProject?.sourceLocale})
+                </label>
+                <input
+                  type="text"
+                  value={newValue}
+                  onChange={(e) => setNewValue(e.target.value)}
+                  placeholder="e.g., Welcome to our app!"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') void handleAddKey();
+                    if (e.key === 'Escape') setShowAddModal(false);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setNewKey('');
+                  setNewValue('');
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => void handleAddKey()}
+                disabled={!newKey.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Add Key
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
@@ -209,7 +301,16 @@ export default function Translations() {
                     </td>
                   ))}
                   <td className="px-6 py-4 text-right whitespace-nowrap">
-                    <button className="text-primary-600 hover:text-primary-800 text-sm font-medium">
+                    <button
+                      onClick={() =>
+                        handleEditStart(
+                          entry.key,
+                          currentProject.sourceLocale,
+                          entry.values[currentProject.sourceLocale] || ''
+                        )
+                      }
+                      className="text-primary-600 hover:text-primary-800 text-sm font-medium"
+                    >
                       Edit
                     </button>
                   </td>
