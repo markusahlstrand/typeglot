@@ -3,5 +3,7 @@
   "buildCommand": "pnpm --filter @typeglot/docs build",
   "outputDirectory": "apps/docs/.vitepress/dist",
   "installCommand": "pnpm install",
-  "framework": null
+  "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false
 }
