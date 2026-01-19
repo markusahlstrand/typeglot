@@ -75,8 +75,8 @@ function getNav(t: Translations): DefaultTheme.NavItem[] {
     {
       text: t.nav_links,
       items: [
-        { text: t.nav_github, link: 'https://github.com/typeglot/typeglot' },
-        { text: t.nav_changelog, link: 'https://github.com/typeglot/typeglot/releases' },
+        { text: t.nav_github, link: 'https://github.com/markusahlstrand/typeglot' },
+        { text: t.nav_changelog, link: 'https://github.com/markusahlstrand/typeglot/releases' },
       ],
     },
   ];
@@ -104,7 +104,7 @@ function getThemeConfig(t: Translations): DefaultTheme.Config {
       text: t.last_updated,
     },
     editLink: {
-      pattern: 'https://github.com/typeglot/typeglot/edit/main/apps/docs/:path',
+      pattern: 'https://github.com/markusahlstrand/typeglot/edit/main/apps/docs/:path',
       text: t.edit_link,
     },
   };
@@ -154,7 +154,7 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/typeglot/typeglot' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/markusahlstrand/typeglot' }],
 
     search: {
       provider: 'local',

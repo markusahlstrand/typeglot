@@ -14,7 +14,7 @@ hero:
       link: /de/guide/getting-started
     - theme: alt
       text: Auf GitHub ansehen
-      link: https://github.com/typeglot/typeglot
+      link: https://github.com/markusahlstrand/typeglot
 
 features:
   - icon: 📁

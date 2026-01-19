@@ -194,7 +194,7 @@ pnpm run package
 
 ```bash
 # Clone the repository
-git clone https://github.com/typeglot/typeglot.git
+git clone https://github.com/markusahlstrand/typeglot.git
 cd typeglot
 
 # Install dependencies

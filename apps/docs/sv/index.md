@@ -14,7 +14,7 @@ hero:
       link: /sv/guide/getting-started
     - theme: alt
       text: Visa på GitHub
-      link: https://github.com/typeglot/typeglot
+      link: https://github.com/markusahlstrand/typeglot
 
 features:
   - icon: 📁

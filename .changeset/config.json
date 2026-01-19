@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "typeglot/typeglot" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "markusahlstrand/typeglot" }],
   "commit": false,
   "fixed": [],
   "linked": [["@typeglot/core", "@typeglot/compiler", "@typeglot/cli"]],
