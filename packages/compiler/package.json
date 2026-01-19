@@ -18,17 +18,17 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src",
     "test": "vitest run",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@typeglot/core": "workspace:*",
-    "chokidar": "^3.5.0"
+    "chokidar": "^5.0.0"
   },
   "devDependencies": {
-    "vitest": "^1.0.0"
+    "vitest": "^4.0.17"
   },
   "keywords": [
     "i18n",

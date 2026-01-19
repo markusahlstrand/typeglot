@@ -27,7 +27,7 @@ export class TranslationCodeActionProvider implements vscode.CodeActionProvider 
   provideCodeActions(
     document: vscode.TextDocument,
     range: vscode.Range | vscode.Selection,
-    context: vscode.CodeActionContext
+    _context: vscode.CodeActionContext
   ): vscode.CodeAction[] {
     const actions: vscode.CodeAction[] = [];
     const line = document.lineAt(range.start.line);
@@ -186,10 +186,10 @@ export class TranslationCodeActionProvider implements vscode.CodeActionProvider 
 /**
  * Extract JSDoc context from the source code around a translation usage
  */
-export async function extractJSDocFromSource(
+export function extractJSDocFromSource(
   document: vscode.TextDocument,
   line: number
-): Promise<{ description?: string; context?: string } | undefined> {
+): { description?: string; context?: string } | undefined {
   // Look for JSDoc comments above the current line
   let searchLine = line - 1;
   const jsDocLines: string[] = [];

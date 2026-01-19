@@ -177,12 +177,12 @@ export default function Translations() {
                             className="flex-1 px-2 py-1 text-sm border border-primary-300 rounded focus:ring-2 focus:ring-primary-500"
                             autoFocus
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') handleEditSave();
+                              if (e.key === 'Enter') void handleEditSave();
                               if (e.key === 'Escape') handleEditCancel();
                             }}
                           />
                           <button
-                            onClick={handleEditSave}
+                            onClick={() => void handleEditSave()}
                             className="text-green-600 hover:text-green-800"
                           >
                             ✓

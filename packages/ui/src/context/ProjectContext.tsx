@@ -56,7 +56,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
   // Initial load
   useEffect(() => {
-    refreshProjects();
+    void refreshProjects();
   }, [refreshProjects]);
 
   return (

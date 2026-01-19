@@ -23,7 +23,7 @@ export class DashboardPanel {
 
     // Handle messages from the webview
     this.panel.webview.onDidReceiveMessage(
-      async (message) => {
+      async (message: { command: string; [key: string]: unknown }) => {
         await this.handleMessage(message);
       },
       null,
@@ -111,7 +111,7 @@ export class DashboardPanel {
         await vscode.commands.executeCommand('typeglot.translateAllMissing');
         break;
 
-      case 'openFile':
+      case 'openFile': {
         const locale = message.locale as string;
         if (this.translationFileManager) {
           const filePath = this.translationFileManager.getLocalePath(locale);
@@ -119,10 +119,11 @@ export class DashboardPanel {
           await vscode.window.showTextDocument(doc);
         }
         break;
+      }
 
       case 'copyKey':
         await vscode.env.clipboard.writeText(message.key as string);
-        vscode.window.showInformationMessage(`Copied "${message.key}" to clipboard`);
+        vscode.window.showInformationMessage(`Copied "${String(message.key)}" to clipboard`);
         break;
     }
   }

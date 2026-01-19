@@ -30,7 +30,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   try {
     config = await loadConfig(workspaceFolder.uri.fsPath);
     console.log('TypeGlot config loaded:', config);
-  } catch (error) {
+  } catch {
     console.log('No TypeGlot config found, using defaults');
     config = {
       sourceLocale: 'en',
@@ -188,7 +188,7 @@ function updateStatusBar(): void {
 /**
  * Initialize TypeGlot in the current workspace
  */
-async function initCommand(): Promise<void> {
+function initCommand(): void {
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
   if (!workspaceFolder) {
     vscode.window.showErrorMessage('Please open a workspace folder first');
@@ -267,7 +267,7 @@ async function translateKeyCommand(key?: string, targetLocales?: string[]): Prom
   const editor = vscode.window.activeTextEditor;
   if (editor && vscode.workspace.getConfiguration('typeglot').get('autoDetectContext', true)) {
     const line = editor.selection.active.line;
-    jsDocContext = await extractJSDocFromSource(editor.document, line);
+    jsDocContext = extractJSDocFromSource(editor.document, line);
   }
 
   // Perform translation with progress
@@ -280,24 +280,24 @@ async function translateKeyCommand(key?: string, targetLocales?: string[]): Prom
     async (progress) => {
       try {
         const translations = await translationService!.translateKey(
-          key!,
+          key,
           sourceValue,
           config!.sourceLocale,
-          targetLocales!,
+          targetLocales,
           jsDocContext
         );
 
         // Save translations to files
         for (const [locale, value] of translations) {
           progress.report({ message: `Saving ${locale}...` });
-          await translationFileManager!.setTranslation(locale, key!, value);
+          await translationFileManager!.setTranslation(locale, key, value);
         }
 
         vscode.window.showInformationMessage(
-          `✓ Translated "${key}" to ${targetLocales!.join(', ')}`
+          `✓ Translated "${key}" to ${targetLocales.join(', ')}`
         );
       } catch (error) {
-        vscode.window.showErrorMessage(`Translation failed: ${error}`);
+        vscode.window.showErrorMessage(`Translation failed: ${String(error)}`);
         translationService?.showOutput();
       }
     }
@@ -330,8 +330,9 @@ async function translateMissingKeyCommand(
   let jsDocContext: { description?: string; context?: string } | undefined;
   if (documentUri && line !== undefined) {
     const doc = await vscode.workspace.openTextDocument(documentUri);
-    jsDocContext = await extractJSDocFromSource(doc, line);
+    jsDocContext = extractJSDocFromSource(doc, line);
   }
+  void jsDocContext; // TODO: Use jsDocContext in translation
 
   // Prompt for the source value
   let defaultValue = key
@@ -493,9 +494,6 @@ async function extractStringCommand(
   // Replace the string in the document with translation call
   if (documentUri && range) {
     const edit = new vscode.WorkspaceEdit();
-    // Expand range to include quotes
-    const doc = await vscode.workspace.openTextDocument(documentUri);
-    const lineText = doc.lineAt(range.start.line).text;
 
     // Determine the replacement text based on context
     const replacement = `m.${key}()`;

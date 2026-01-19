@@ -67,7 +67,7 @@ export default function ProjectSelector() {
             {projects.map((project) => (
               <button
                 key={project.id}
-                onClick={() => handleSelect(project.id)}
+                onClick={() => void handleSelect(project.id)}
                 className={`w-full text-left px-3 py-2 hover:bg-gray-50 flex items-start space-x-3 ${
                   project.id === currentProject?.id ? 'bg-primary-50' : ''
                 }`}

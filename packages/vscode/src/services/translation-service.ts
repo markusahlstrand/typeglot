@@ -51,7 +51,7 @@ export class TranslationService {
         results.set(targetLocale, translation);
         this.outputChannel.appendLine(`✓ ${targetLocale}: ${translation}`);
       } catch (error) {
-        this.outputChannel.appendLine(`✗ ${targetLocale}: ${error}`);
+        this.outputChannel.appendLine(`✗ ${targetLocale}: ${String(error)}`);
         throw error;
       }
     }
