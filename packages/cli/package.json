@@ -1,6 +1,6 @@
 {
   "name": "typeglot",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "TypeGlot CLI - developer-first, Git-native i18n toolchain",
   "repository": {
     "type": "git",
