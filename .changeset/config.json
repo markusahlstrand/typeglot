@@ -3,7 +3,7 @@
   "changelog": ["@changesets/changelog-github", { "repo": "markusahlstrand/typeglot" }],
   "commit": false,
   "fixed": [],
-  "linked": [["@typeglot/core", "@typeglot/compiler", "@typeglot/cli"]],
+  "linked": [["@typeglot/core", "@typeglot/compiler", "typeglot"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
