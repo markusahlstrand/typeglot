@@ -2,7 +2,7 @@
   "name": "typeglot-vscode",
   "displayName": "TypeGlot - Type-Safe i18n",
   "description": "The only i18n solution with full TypeScript support. Git-native translations with inline previews, AI-powered translation via GitHub Copilot, and zero sync anxiety.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "MarkusAhlstrand",
   "icon": "media/icon.png",
   "galleryBanner": {
