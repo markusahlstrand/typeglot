@@ -69,6 +69,20 @@ export type LocaleCode = string;
 export type TranslationFile = Record<string, string>;
 
 /**
+ * Interpolation syntax style
+ * - 'single' uses {variable} format (default, ICU-style)
+ * - 'double' uses {{variable}} format (i18next, Handlebars-style)
+ */
+export type InterpolationSyntax = 'single' | 'double';
+
+/**
+ * Locale file pattern
+ * - '{locale}.json' - flat structure (en.json, es.json)
+ * - '{locale}/{namespace}.json' - namespace structure (en/default.json, en/common.json)
+ */
+export type LocaleFilePattern = '{locale}.json' | '{locale}/{namespace}.json';
+
+/**
  * Zod schema for TypeGlot configuration
  */
 export const TypeGlotConfigSchema = z.object({
@@ -78,6 +92,8 @@ export const TypeGlotConfigSchema = z.object({
   outputDir: z.string().default('./src/generated/i18n'),
   include: z.array(z.string()).default(['src/**/*.{ts,tsx,js,jsx}']),
   exclude: z.array(z.string()).default(['node_modules', 'dist']),
+  interpolation: z.enum(['single', 'double']).default('single'),
+  filePattern: z.enum(['{locale}.json', '{locale}/{namespace}.json']).default('{locale}.json'),
   ai: z
     .object({
       provider: z.enum(['openai', 'anthropic', 'copilot']).default('openai'),

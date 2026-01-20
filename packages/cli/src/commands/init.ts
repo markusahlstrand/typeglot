@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import chalk from 'chalk';
 import { select, checkbox, confirm } from '@inquirer/prompts';
-import { saveConfig, DEFAULT_CONFIG } from '@typeglot/core';
+import { saveConfig, DEFAULT_CONFIG, InterpolationSyntax, LocaleFilePattern } from '@typeglot/core';
 import { parse as parseYaml } from 'yaml';
 import { glob } from 'glob';
 
@@ -19,6 +19,8 @@ interface MonorepoPackage {
 interface ExistingLocales {
   dir: string;
   locales: string[];
+  filePattern: LocaleFilePattern;
+  namespaces?: string[];
 }
 
 interface PackageJson {
@@ -48,9 +50,14 @@ async function findExistingLocales(packagePath: string): Promise<ExistingLocales
   for (const relativePath of commonPaths) {
     const fullPath = path.join(packagePath, relativePath);
     if (fs.existsSync(fullPath)) {
-      const locales = await findLocalesInDir(fullPath);
-      if (locales.length > 0) {
-        return { dir: relativePath, locales };
+      const result = await findLocalesInDir(fullPath);
+      if (result && result.locales.length > 0) {
+        return {
+          dir: relativePath,
+          locales: result.locales,
+          filePattern: result.filePattern,
+          namespaces: result.namespaces,
+        };
       }
     }
   }
@@ -65,27 +72,75 @@ async function findExistingLocales(packagePath: string): Promise<ExistingLocales
   return null;
 }
 
+interface LocaleDetectionResult {
+  locales: string[];
+  filePattern: LocaleFilePattern;
+  namespaces?: string[];
+}
+
 /**
- * Find locale files/directories in a given directory
+ * Find locale files/directories in a given directory and detect the pattern
  */
-async function findLocalesInDir(dir: string): Promise<string[]> {
-  const locales: string[] = [];
+async function findLocalesInDir(dir: string): Promise<LocaleDetectionResult | null> {
   const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+
+  const fileLocales: string[] = [];
+  const dirLocales: string[] = [];
+  const namespaces = new Set<string>();
 
   for (const entry of entries) {
     if (entry.isFile() && entry.name.endsWith('.json')) {
       // File-based locales (en.json, es.json)
       const locale = entry.name.replace('.json', '');
       if (isValidLocaleCode(locale)) {
-        locales.push(locale);
+        fileLocales.push(locale);
       }
     } else if (entry.isDirectory() && isValidLocaleCode(entry.name)) {
-      // Directory-based locales (en/, es/)
-      locales.push(entry.name);
+      // Directory-based locales (en/, es/) - check for namespace files inside
+      dirLocales.push(entry.name);
+
+      // Find namespaces (JSON files inside locale directory)
+      const localeDir = path.join(dir, entry.name);
+      try {
+        const localeEntries = await fs.promises.readdir(localeDir, { withFileTypes: true });
+        for (const localeEntry of localeEntries) {
+          if (localeEntry.isFile() && localeEntry.name.endsWith('.json')) {
+            namespaces.add(localeEntry.name.replace('.json', ''));
+          }
+        }
+      } catch {
+        // Ignore read errors
+      }
     }
   }
 
-  return locales;
+  // Prefer namespace format if we found locale directories with JSON files inside
+  if (dirLocales.length > 0 && namespaces.size > 0) {
+    return {
+      locales: dirLocales,
+      filePattern: '{locale}/{namespace}.json',
+      namespaces: Array.from(namespaces),
+    };
+  }
+
+  // Fall back to flat format if we found locale JSON files
+  if (fileLocales.length > 0) {
+    return {
+      locales: fileLocales,
+      filePattern: '{locale}.json',
+    };
+  }
+
+  // Also accept directory-based locales without files yet
+  if (dirLocales.length > 0) {
+    return {
+      locales: dirLocales,
+      filePattern: '{locale}/{namespace}.json',
+      namespaces: ['default'],
+    };
+  }
+
+  return null;
 }
 
 /**
@@ -103,11 +158,13 @@ async function deepSearchLocales(
 
       // Check if this directory contains locales
       if (entry.name === 'locales' || entry.name === 'i18n' || entry.name === 'lang') {
-        const locales = await findLocalesInDir(subPath);
-        if (locales.length > 0) {
+        const result = await findLocalesInDir(subPath);
+        if (result && result.locales.length > 0) {
           return {
             dir: path.relative(packagePath, subPath),
-            locales,
+            locales: result.locales,
+            filePattern: result.filePattern,
+            namespaces: result.namespaces,
           };
         }
       }
@@ -115,11 +172,13 @@ async function deepSearchLocales(
       // Check subdirectories (only 1 level deep to avoid slow searches)
       const nestedLocalesPath = path.join(subPath, 'locales');
       if (fs.existsSync(nestedLocalesPath)) {
-        const locales = await findLocalesInDir(nestedLocalesPath);
-        if (locales.length > 0) {
+        const result = await findLocalesInDir(nestedLocalesPath);
+        if (result && result.locales.length > 0) {
           return {
             dir: path.relative(packagePath, nestedLocalesPath),
-            locales,
+            locales: result.locales,
+            filePattern: result.filePattern,
+            namespaces: result.namespaces,
           };
         }
       }
@@ -135,6 +194,55 @@ async function deepSearchLocales(
 function isValidLocaleCode(code: string): boolean {
   // Match common locale patterns: en, en-US, en_US, zh-Hans, etc.
   return /^[a-z]{2}(-[A-Z]{2})?(_[A-Z]{2})?(-[A-Za-z]+)?$/i.test(code);
+}
+
+/**
+ * Detect interpolation syntax from existing translation files
+ * Returns 'double' if {{var}} pattern is found, otherwise 'single'
+ */
+async function detectInterpolationSyntax(
+  localesDir: string,
+  filePattern: LocaleFilePattern
+): Promise<InterpolationSyntax> {
+  try {
+    const entries = await fs.promises.readdir(localesDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (entry.isFile() && entry.name.endsWith('.json')) {
+        // Flat format: en.json directly in localesDir
+        const filePath = path.join(localesDir, entry.name);
+        const content = await fs.promises.readFile(filePath, 'utf-8');
+
+        // Check for double brace pattern {{variable}} (i18next style)
+        if (/\{\{[a-zA-Z_]\w*\}\}/.test(content)) {
+          return 'double';
+        }
+      } else if (
+        entry.isDirectory() &&
+        filePattern === '{locale}/{namespace}.json' &&
+        isValidLocaleCode(entry.name)
+      ) {
+        // Namespace format: check files inside locale directory
+        const localeDir = path.join(localesDir, entry.name);
+        const localeEntries = await fs.promises.readdir(localeDir, { withFileTypes: true });
+
+        for (const localeEntry of localeEntries) {
+          if (localeEntry.isFile() && localeEntry.name.endsWith('.json')) {
+            const filePath = path.join(localeDir, localeEntry.name);
+            const content = await fs.promises.readFile(filePath, 'utf-8');
+
+            if (/\{\{[a-zA-Z_]\w*\}\}/.test(content)) {
+              return 'double';
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // Ignore errors, default to single
+  }
+
+  return 'single';
 }
 
 /**
@@ -246,6 +354,9 @@ async function findPackagesFromPatterns(
 interface InitResult {
   localesDir: string;
   sourceLocale: string;
+  interpolation: InterpolationSyntax;
+  filePattern: LocaleFilePattern;
+  namespaces?: string[];
 }
 
 async function initializePackage(
@@ -258,10 +369,17 @@ async function initializePackage(
 
   let finalLocalesDir = localesDir;
   let finalLocale = locale;
+  let interpolation: InterpolationSyntax = 'single';
+  let filePattern: LocaleFilePattern = '{locale}.json';
+  let namespaces: string[] | undefined;
 
   if (existingLocales) {
     console.log(chalk.yellow(`\n📂 Found existing locale files in ${existingLocales.dir}/`));
     console.log(chalk.dim(`   Locales: ${existingLocales.locales.join(', ')}`));
+    console.log(chalk.dim(`   Format: ${existingLocales.filePattern}`));
+    if (existingLocales.namespaces && existingLocales.namespaces.length > 0) {
+      console.log(chalk.dim(`   Namespaces: ${existingLocales.namespaces.join(', ')}`));
+    }
 
     const useExisting = await confirm({
       message: `Use existing locales directory (${existingLocales.dir})?`,
@@ -270,6 +388,20 @@ async function initializePackage(
 
     if (useExisting) {
       finalLocalesDir = existingLocales.dir;
+      filePattern = existingLocales.filePattern;
+      namespaces = existingLocales.namespaces;
+
+      // Detect interpolation syntax from existing files
+      const fullLocalesPath = path.join(packagePath, finalLocalesDir);
+      interpolation = await detectInterpolationSyntax(fullLocalesPath, filePattern);
+
+      if (interpolation === 'double') {
+        console.log(
+          chalk.cyan('   Detected'),
+          chalk.bold('{{variable}}'),
+          chalk.cyan('interpolation syntax (i18next/Handlebars style)')
+        );
+      }
 
       // Ask which locale is the source
       if (existingLocales.locales.length > 1) {
@@ -289,6 +421,8 @@ async function initializePackage(
     ...DEFAULT_CONFIG,
     sourceLocale: finalLocale,
     localesDir: finalLocalesDir,
+    interpolation,
+    filePattern,
   };
 
   await saveConfig(packagePath, config);
@@ -302,18 +436,37 @@ async function initializePackage(
   }
 
   // Create source locale file only if directory is new
-  const sourceFile = path.join(localesDirPath, `${finalLocale}.json`);
-  if (!existingLocales && !fs.existsSync(sourceFile)) {
-    const initialContent = {
-      hello: 'Hello',
-      welcome: 'Welcome, {name}!',
-      items_count: '{count, plural, one {# item} other {# items}}',
-    };
-    await fs.promises.writeFile(sourceFile, JSON.stringify(initialContent, null, 2), 'utf-8');
-    console.log(
-      chalk.green('✓'),
-      `Created ${finalLocalesDir}/${finalLocale}.json with example keys`
-    );
+  if (!existingLocales) {
+    // Determine the file path based on pattern
+    let sourceFile: string;
+    if (filePattern === '{locale}/{namespace}.json') {
+      // Namespace format: create locale directory and default.json
+      const localePath = path.join(localesDirPath, finalLocale);
+      await fs.promises.mkdir(localePath, { recursive: true });
+      sourceFile = path.join(localePath, 'default.json');
+    } else {
+      // Flat format: create locale.json
+      sourceFile = path.join(localesDirPath, `${finalLocale}.json`);
+    }
+
+    if (!fs.existsSync(sourceFile)) {
+      // Use interpolation syntax matching the config
+      const initialContent =
+        interpolation === 'double'
+          ? {
+              hello: 'Hello',
+              welcome: 'Welcome, {{name}}!',
+              items_count: '{{count}} items',
+            }
+          : {
+              hello: 'Hello',
+              welcome: 'Welcome, {name}!',
+              items_count: '{count, plural, one {# item} other {# items}}',
+            };
+      await fs.promises.writeFile(sourceFile, JSON.stringify(initialContent, null, 2), 'utf-8');
+      const relativePath = path.relative(packagePath, sourceFile);
+      console.log(chalk.green('✓'), `Created ${relativePath} with example keys`);
+    }
   }
 
   // Create output directory
@@ -321,7 +474,13 @@ async function initializePackage(
   await fs.promises.mkdir(outputDir, { recursive: true });
   console.log(chalk.green('✓'), `Created ${config.outputDir}/`);
 
-  return { localesDir: finalLocalesDir, sourceLocale: finalLocale };
+  return {
+    localesDir: finalLocalesDir,
+    sourceLocale: finalLocale,
+    interpolation,
+    filePattern,
+    namespaces,
+  };
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
