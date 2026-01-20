@@ -2,6 +2,11 @@
   "name": "@typeglot/cli",
   "version": "0.2.0",
   "description": "TypeGlot CLI - command-line interface for i18n management",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markusahlstrand/typeglot",
+    "directory": "packages/cli"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

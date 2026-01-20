@@ -2,6 +2,11 @@
   "name": "@typeglot/compiler",
   "version": "0.2.0",
   "description": "TypeGlot compiler - generates TypeScript functions from JSON translation files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markusahlstrand/typeglot",
+    "directory": "packages/compiler"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
