@@ -1,4 +1,6 @@
-import { TranslationRequest } from '../types.js';
+import { TranslationRequest, InterpolationSyntax } from '../types.js';
+
+export type { InterpolationSyntax };
 
 /**
  * Build a prompt for AI translation with full context
@@ -64,10 +66,20 @@ export function buildTranslationPrompt(request: TranslationRequest): string {
 
 /**
  * Parse parameters from a translation message value
+ * @param value - The translation message value
+ * @param interpolation - The interpolation syntax ('single' for {var}, 'double' for {{var}})
  */
-export function parseMessageParams(value: string): { name: string; type: 'string' | 'number' }[] {
+export function parseMessageParams(
+  value: string,
+  interpolation: InterpolationSyntax = 'single'
+): { name: string; type: 'string' | 'number' }[] {
   const params: { name: string; type: 'string' | 'number' }[] = [];
-  const regex = /\{(\w+)(?:,\s*(\w+))?\}/g;
+
+  // Choose regex based on interpolation style
+  // Single: {name} or {count, number}
+  // Double: {{name}} or {{count, number}}
+  const regex =
+    interpolation === 'double' ? /\{\{(\w+)(?:,\s*(\w+))?\}\}/g : /\{(\w+)(?:,\s*(\w+))?\}/g;
 
   let match;
   while ((match = regex.exec(value)) !== null) {

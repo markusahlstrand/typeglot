@@ -1,6 +1,14 @@
 import * as fs from 'node:fs';
+import type { InterpolationSyntax } from '@typeglot/core';
 
 export type ParsedTranslations = Record<string, string>;
+
+/**
+ * Get the regex for parsing interpolation based on syntax
+ */
+export function getInterpolationRegex(syntax: InterpolationSyntax = 'single'): RegExp {
+  return syntax === 'double' ? /\{\{(\w+)\}\}/g : /\{(\w+)\}/g;
+}
 
 /**
  * Parse a JSON translation file
@@ -39,9 +47,9 @@ function flattenTranslations(obj: Record<string, unknown>, prefix = ''): ParsedT
 /**
  * Parse a translation value for parameters
  */
-export function parseParameters(value: string): string[] {
+export function parseParameters(value: string, syntax: InterpolationSyntax = 'single'): string[] {
   const params: string[] = [];
-  const regex = /\{(\w+)\}/g;
+  const regex = getInterpolationRegex(syntax);
 
   let match;
   while ((match = regex.exec(value)) !== null) {

@@ -1,7 +1,7 @@
 {
-  "name": "@typeglot/cli",
+  "name": "typeglot",
   "version": "0.3.0",
-  "description": "TypeGlot CLI - command-line interface for i18n management",
+  "description": "TypeGlot CLI - developer-first, Git-native i18n toolchain",
   "repository": {
     "type": "git",
     "url": "https://github.com/markusahlstrand/typeglot",

@@ -23,6 +23,12 @@ program
   .action(devCommand);
 
 program
+  .command('ui')
+  .description('Start the translation management UI (alias for dev)')
+  .option('-p, --port <port>', 'Port for the UI', '3333')
+  .action(devCommand);
+
+program
   .command('build')
   .description('Compile translation files to TypeScript')
   .option('-w, --watch', 'Watch for changes')

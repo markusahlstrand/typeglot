@@ -10,4 +10,6 @@ export const DEFAULT_CONFIG: TypeGlotConfig = {
   outputDir: './src/generated/i18n',
   include: ['src/**/*.{ts,tsx,js,jsx}'],
   exclude: ['node_modules', 'dist'],
+  interpolation: 'single',
+  filePattern: '{locale}.json',
 };
