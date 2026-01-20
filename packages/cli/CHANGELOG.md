@@ -1,5 +1,11 @@
 # @typeglot/cli
 
+## 0.4.0
+
+### Minor Changes
+
+- [#8](https://github.com/markusahlstrand/typeglot/pull/8) [`4cafedd`](https://github.com/markusahlstrand/typeglot/commit/4cafedd1ed66f38a5a473bbede2416094ffb654c) Thanks [@markusahlstrand](https://github.com/markusahlstrand)! - Update the changeset config
+
 ## 0.3.0
 
 ### Minor Changes
