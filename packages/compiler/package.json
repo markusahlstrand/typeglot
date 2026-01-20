@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@typeglot/core": "workspace:*",
+    "@typeglot/core": "workspace:^",
     "chokidar": "^5.0.0"
   },
   "devDependencies": {
