@@ -46,10 +46,6 @@ importers:
         version: 8.53.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   apps/docs:
-    dependencies:
-      '@typeglot/cli':
-        specifier: workspace:*
-        version: link:../../packages/cli
     devDependencies:
       vitepress:
         specifier: ^1.0.0
