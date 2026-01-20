@@ -1,6 +1,6 @@
 {
   "name": "@typeglot/ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TypeGlot development dashboard - local React-based UI for managing translations",
   "private": true,
   "type": "module",

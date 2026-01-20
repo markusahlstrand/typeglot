@@ -1,6 +1,6 @@
 {
   "name": "@typeglot/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Core logic for TypeGlot - config parsing, AST analysis, and AI prompting",
   "repository": {
     "type": "git",
