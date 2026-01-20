@@ -3,6 +3,8 @@ import * as path from 'node:path';
 import chalk from 'chalk';
 import { select, checkbox, confirm } from '@inquirer/prompts';
 import { saveConfig, DEFAULT_CONFIG } from '@typeglot/core';
+import { parse as parseYaml } from 'yaml';
+import { glob } from 'glob';
 
 interface InitOptions {
   locale: string;
@@ -22,6 +24,10 @@ interface ExistingLocales {
 interface PackageJson {
   name?: string;
   workspaces?: string[] | { packages?: string[] };
+}
+
+interface PnpmWorkspace {
+  packages?: string[];
 }
 
 /**
@@ -141,30 +147,15 @@ async function readPackageJson(filePath: string): Promise<PackageJson> {
 
 async function detectMonorepo(cwd: string): Promise<MonorepoPackage[] | null> {
   // Check for pnpm-workspace.yaml
-  const pnpmWorkspace = path.join(cwd, 'pnpm-workspace.yaml');
-  if (fs.existsSync(pnpmWorkspace)) {
-    const packagesDir = path.join(cwd, 'packages');
-    if (fs.existsSync(packagesDir)) {
-      const packages: MonorepoPackage[] = [];
-      const entries = await fs.promises.readdir(packagesDir, { withFileTypes: true });
-
-      for (const entry of entries) {
-        if (entry.isDirectory()) {
-          const pkgJsonPath = path.join(packagesDir, entry.name, 'package.json');
-          if (fs.existsSync(pkgJsonPath)) {
-            const pkgJson = await readPackageJson(pkgJsonPath);
-            packages.push({
-              name: pkgJson.name ?? entry.name,
-              path: path.join(packagesDir, entry.name),
-            });
-          }
-        }
-      }
-      return packages.length > 0 ? packages : null;
+  const pnpmWorkspacePath = path.join(cwd, 'pnpm-workspace.yaml');
+  if (fs.existsSync(pnpmWorkspacePath)) {
+    const packages = await detectPnpmWorkspaces(cwd, pnpmWorkspacePath);
+    if (packages && packages.length > 0) {
+      return packages;
     }
   }
 
-  // Check for package.json workspaces
+  // Check for package.json workspaces (npm/yarn workspaces)
   const pkgJsonPath = path.join(cwd, 'package.json');
   if (fs.existsSync(pkgJsonPath)) {
     const pkgJson = await readPackageJson(pkgJsonPath);
@@ -173,39 +164,95 @@ async function detectMonorepo(cwd: string): Promise<MonorepoPackage[] | null> {
         ? pkgJson.workspaces
         : (pkgJson.workspaces.packages ?? []);
 
-      const packages: MonorepoPackage[] = [];
-      for (const pattern of workspaces) {
-        const glob = pattern.replace('*', '');
-        const workspaceDir = path.join(cwd, glob);
-
-        if (fs.existsSync(workspaceDir)) {
-          const entries = await fs.promises.readdir(workspaceDir, { withFileTypes: true });
-          for (const entry of entries) {
-            if (entry.isDirectory()) {
-              const pkgPath = path.join(workspaceDir, entry.name, 'package.json');
-              if (fs.existsSync(pkgPath)) {
-                const pkg = await readPackageJson(pkgPath);
-                packages.push({
-                  name: pkg.name ?? entry.name,
-                  path: path.join(workspaceDir, entry.name),
-                });
-              }
-            }
-          }
-        }
+      const packages = await findPackagesFromPatterns(cwd, workspaces);
+      if (packages.length > 0) {
+        return packages;
       }
-      return packages.length > 0 ? packages : null;
     }
   }
 
   return null;
 }
 
+/**
+ * Detect packages from pnpm-workspace.yaml configuration
+ */
+async function detectPnpmWorkspaces(
+  cwd: string,
+  workspacePath: string
+): Promise<MonorepoPackage[] | null> {
+  try {
+    const content = await fs.promises.readFile(workspacePath, 'utf-8');
+    const config = parseYaml(content) as PnpmWorkspace;
+
+    if (!config.packages || config.packages.length === 0) {
+      // Fallback to default pnpm patterns if packages not specified
+      return findPackagesFromPatterns(cwd, ['packages/*']);
+    }
+
+    return findPackagesFromPatterns(cwd, config.packages);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(chalk.yellow(`Warning: Could not parse pnpm-workspace.yaml: ${message}`));
+    return null;
+  }
+}
+
+/**
+ * Find packages matching glob patterns
+ */
+async function findPackagesFromPatterns(
+  cwd: string,
+  patterns: string[]
+): Promise<MonorepoPackage[]> {
+  const packages: MonorepoPackage[] = [];
+  const seenPaths = new Set<string>();
+
+  // Filter out negation patterns and handle them separately
+  const includePatterns = patterns.filter((p) => !p.startsWith('!'));
+  const excludePatterns = patterns.filter((p) => p.startsWith('!')).map((p) => p.slice(1)); // Remove the ! prefix
+
+  for (const pattern of includePatterns) {
+    // Glob patterns in workspace configs point to directories containing package.json
+    const matches = await glob(pattern, {
+      cwd,
+      ignore: ['**/node_modules/**', ...excludePatterns],
+      absolute: true,
+    });
+
+    for (const match of matches) {
+      // Skip if we've already processed this path
+      if (seenPaths.has(match)) continue;
+      seenPaths.add(match);
+
+      const pkgJsonPath = path.join(match, 'package.json');
+      if (fs.existsSync(pkgJsonPath)) {
+        try {
+          const pkgJson = await readPackageJson(pkgJsonPath);
+          packages.push({
+            name: pkgJson.name ?? path.basename(match),
+            path: match,
+          });
+        } catch {
+          // Skip packages with invalid package.json
+        }
+      }
+    }
+  }
+
+  return packages;
+}
+
+interface InitResult {
+  localesDir: string;
+  sourceLocale: string;
+}
+
 async function initializePackage(
   packagePath: string,
   locale: string,
   localesDir: string
-): Promise<void> {
+): Promise<InitResult> {
   // Check for existing locale files
   const existingLocales = await findExistingLocales(packagePath);
 
@@ -273,6 +320,8 @@ async function initializePackage(
   const outputDir = path.join(packagePath, config.outputDir);
   await fs.promises.mkdir(outputDir, { recursive: true });
   console.log(chalk.green('✓'), `Created ${config.outputDir}/`);
+
+  return { localesDir: finalLocalesDir, sourceLocale: finalLocale };
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
@@ -295,8 +344,9 @@ export async function initCommand(options: InitOptions): Promise<void> {
     });
 
     if (initLocation === 'root') {
-      await initializePackage(projectRoot, options.locale, options.dir);
+      const result = await initializePackage(projectRoot, options.locale, options.dir);
       console.log('\n' + chalk.green('TypeGlot initialized at root level! 🎉'));
+      showNextSteps(result.localesDir, result.sourceLocale);
     } else {
       const selectedPackages = await checkbox<string>({
         message: 'Select packages to initialize:',
@@ -321,18 +371,40 @@ export async function initCommand(options: InitOptions): Promise<void> {
         '\n' +
           chalk.green(`TypeGlot initialized in ${String(selectedPackages.length)} package(s)! 🎉`)
       );
+      // For multiple packages, show generic guidance since each may have different settings
+      showNextSteps(options.dir, options.locale, true);
     }
   } else {
     // Single package initialization
-    await initializePackage(projectRoot, options.locale, options.dir);
+    const result = await initializePackage(projectRoot, options.locale, options.dir);
     console.log('\n' + chalk.green('TypeGlot initialized successfully! 🎉'));
+    showNextSteps(result.localesDir, result.sourceLocale);
   }
+}
 
+/**
+ * Display next steps after initialization
+ */
+function showNextSteps(localesDir: string, sourceLocale: string, isMultiPackage = false): void {
   console.log('\nNext steps:');
+  if (isMultiPackage) {
+    console.log(chalk.cyan('  1.'), 'Add translations to your locale JSON files in each package');
+  } else {
+    console.log(
+      chalk.cyan('  1.'),
+      `Add translations to your ${localesDir}/${sourceLocale}.json file`
+    );
+  }
   console.log(
-    chalk.cyan('  1.'),
-    `Add translations to your ${options.dir}/${options.locale}.json file(s)`
+    chalk.cyan('  2.'),
+    'Run',
+    chalk.yellow('npx @typeglot/cli build'),
+    'to generate TypeScript'
   );
-  console.log(chalk.cyan('  2.'), 'Run', chalk.yellow('typeglot build'), 'to generate TypeScript');
-  console.log(chalk.cyan('  3.'), 'Run', chalk.yellow('typeglot dev'), 'to start development mode');
+  console.log(
+    chalk.cyan('  3.'),
+    'Run',
+    chalk.yellow('npx @typeglot/cli dev'),
+    'to start development mode'
+  );
 }

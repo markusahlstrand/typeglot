@@ -14,7 +14,7 @@ Diese Anleitung hilft Ihnen, TypeGlot in weniger als 5 Minuten in Ihrem Projekt 
 Der schnellste Weg zum Einstieg ist die Verwendung des CLI:
 
 ```bash
-npx typeglot init
+npx @typeglot/cli init
 ```
 
 Dies erstellt:
@@ -61,7 +61,7 @@ Erstellen Sie Ihre Quell-Übersetzungsdatei `locales/en.json`:
 Kompilieren Sie Ihre Übersetzungen zu TypeScript:
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 Dies generiert typisierte Funktionen in `src/generated/i18n/`:
@@ -100,7 +100,7 @@ const itemText = m.items_count({ count: 5 });
 Starten Sie den Entwicklungsserver für automatische Neukompilierung:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 Dies wird:

@@ -44,13 +44,13 @@ features:
 
 ```bash
 # Initialize TypeGlot in your project
-npx typeglot init
+npx @typeglot/cli init
 
 # Build typed translations
-npx typeglot build
+npx @typeglot/cli build
 
 # Start development mode
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 ## Why TypeGlot?

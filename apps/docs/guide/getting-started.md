@@ -135,7 +135,7 @@ Create your source translation file `locales/en.json`:
 Compile your translations to TypeScript:
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 This generates typed functions in `src/generated/i18n/`:

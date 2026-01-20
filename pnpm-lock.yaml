@@ -71,12 +71,18 @@ importers:
       commander:
         specifier: ^11.1.0
         version: 11.1.0
+      glob:
+        specifier: ^13.0.0
+        version: 13.0.0
       hono:
         specifier: ^4.11.4
         version: 4.11.4
       ora:
         specifier: ^8.0.0
         version: 8.2.0
+      yaml:
+        specifier: ^2.8.2
+        version: 2.8.2
     devDependencies:
       vitest:
         specifier: ^1.0.0

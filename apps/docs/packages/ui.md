@@ -17,7 +17,7 @@ The TypeGlot Dashboard is a local development tool that provides:
 The dashboard is typically started via the CLI:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 Or run it standalone:
@@ -188,7 +188,7 @@ theme: {
 Change the default port in `vite.config.ts` or via CLI:
 
 ```bash
-npx typeglot dev --port 4000
+npx @typeglot/cli dev --port 4000
 ```
 
 ## Dependencies

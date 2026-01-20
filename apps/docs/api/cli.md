@@ -18,7 +18,7 @@ These options work with all commands:
 Initialize TypeGlot in a project.
 
 ```bash
-npx typeglot init [options]
+npx @typeglot/cli init [options]
 ```
 
 #### Options
@@ -32,16 +32,16 @@ npx typeglot init [options]
 
 ```bash
 # Default initialization
-npx typeglot init
+npx @typeglot/cli init
 
 # Custom source locale
-npx typeglot init --locale de
+npx @typeglot/cli init --locale de
 
 # Custom directory
-npx typeglot init --dir ./translations
+npx @typeglot/cli init --dir ./translations
 
 # Combined
-npx typeglot init -l fr -d ./i18n
+npx @typeglot/cli init -l fr -d ./i18n
 ```
 
 #### Output
@@ -59,7 +59,7 @@ Creates:
 Compile translation files to TypeScript.
 
 ```bash
-npx typeglot build [options]
+npx @typeglot/cli build [options]
 ```
 
 #### Options
@@ -73,16 +73,16 @@ npx typeglot build [options]
 
 ```bash
 # Single build
-npx typeglot build
+npx @typeglot/cli build
 
 # Watch mode
-npx typeglot build --watch
+npx @typeglot/cli build --watch
 
 # Verbose
-npx typeglot build -v
+npx @typeglot/cli build -v
 
 # Watch with verbose
-npx typeglot build -w -v
+npx @typeglot/cli build -w -v
 ```
 
 #### Output
@@ -100,7 +100,7 @@ Generates in `outputDir`:
 Start development mode with file watching and dashboard.
 
 ```bash
-npx typeglot dev [options]
+npx @typeglot/cli dev [options]
 ```
 
 #### Options
@@ -114,13 +114,13 @@ npx typeglot dev [options]
 
 ```bash
 # Default
-npx typeglot dev
+npx @typeglot/cli dev
 
 # Custom port
-npx typeglot dev --port 4000
+npx @typeglot/cli dev --port 4000
 
 # Without dashboard
-npx typeglot dev --no-ui
+npx @typeglot/cli dev --no-ui
 ```
 
 #### Behavior
@@ -140,7 +140,7 @@ Press `Ctrl+C` to stop.
 Generate translations using AI.
 
 ```bash
-npx typeglot translate [options]
+npx @typeglot/cli translate [options]
 ```
 
 #### Options
@@ -155,22 +155,22 @@ npx typeglot translate [options]
 
 ```bash
 # Translate all missing keys
-npx typeglot translate
+npx @typeglot/cli translate
 
 # Specific locales
-npx typeglot translate --target es fr
+npx @typeglot/cli translate --target es fr
 
 # Specific key
-npx typeglot translate --key checkout_button
+npx @typeglot/cli translate --key checkout_button
 
 # Specific key to specific locales
-npx typeglot translate -k welcome -t es fr de
+npx @typeglot/cli translate -k welcome -t es fr de
 
 # Dry run
-npx typeglot translate --dry-run
+npx @typeglot/cli translate --dry-run
 
 # Key with glob pattern
-npx typeglot translate --key "user.*"
+npx @typeglot/cli translate --key "user.*"
 ```
 
 #### Behavior
@@ -196,7 +196,7 @@ npx typeglot translate --key "user.*"
 Validate translation coverage (planned feature).
 
 ```bash
-npx typeglot check [options]
+npx @typeglot/cli check [options]
 ```
 
 #### Options
@@ -210,13 +210,13 @@ npx typeglot check [options]
 
 ```bash
 # Check all locales
-npx typeglot check
+npx @typeglot/cli check
 
 # Require 90% coverage
-npx typeglot check --coverage 90
+npx @typeglot/cli check --coverage 90
 
 # Check specific locales
-npx typeglot check --locales es fr
+npx @typeglot/cli check --locales es fr
 ```
 
 ---
@@ -233,7 +233,7 @@ npx typeglot check --locales es fr
 Enable verbose logging with `--verbose` or `-v`:
 
 ```bash
-npx typeglot build --verbose
+npx @typeglot/cli build --verbose
 ```
 
 Output includes:
@@ -254,7 +254,7 @@ The CLI looks for configuration in:
 Override with `TYPEGLOT_CONFIG` environment variable:
 
 ```bash
-TYPEGLOT_CONFIG=./custom-config.json npx typeglot build
+TYPEGLOT_CONFIG=./custom-config.json npx @typeglot/cli build
 ```
 
 ## Working Directory
@@ -263,7 +263,7 @@ Commands run in the current working directory. Use `cd` to change:
 
 ```bash
 cd packages/web
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 ## Piping and Scripts
