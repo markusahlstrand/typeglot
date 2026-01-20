@@ -1,6 +1,20 @@
-# TypeGlot VS Code Extension
+# TypeGlot - Type-Safe i18n for VS Code
 
-The TypeGlot VS Code extension provides an integrated, developer-first internationalization experience directly within your editor. Never leave VS Code to manage translations again.
+[![Version](https://img.shields.io/visual-studio-marketplace/v/typeglot.typeglot-vscode)](https://marketplace.visualstudio.com/items?itemName=typeglot.typeglot-vscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/typeglot.typeglot-vscode)](https://marketplace.visualstudio.com/items?itemName=typeglot.typeglot-vscode)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+**The only i18n solution with full TypeScript support.** Git-native translations, inline previews, and AI-powered translation via GitHub Copilot.
+
+## ✨ Why TypeGlot?
+
+| Feature            | TypeGlot                            | Other i18n        |
+| ------------------ | ----------------------------------- | ----------------- |
+| **Type Safety**    | ✅ Full compile-time checking       | ❌ Magic strings  |
+| **Git-Native**     | ✅ No cloud sync needed             | ⚠️ Requires sync  |
+| **AI Translation** | ✅ Uses Copilot you already pay for | 💰 Extra cost     |
+| **Context-Aware**  | ✅ JSDoc → AI prompt                | ❌ Manual context |
+| **Cost**           | ✅ Free forever                     | 💰 $50-120/month  |
 
 ## Features
 
@@ -135,10 +149,29 @@ src/
 
 ## Requirements
 
-- VS Code 1.90.0 or higher
+- VS Code 1.108.0 or higher
 - GitHub Copilot extension (for AI features)
-- A TypeGlot project with `typeglot.config.json` or `locales/` directory
+- A TypeGlot project with `typeglot.config.json`
+
+## Quick Start
+
+1. **Install the extension**
+2. **Initialize TypeGlot** in your project:
+   ```bash
+   npx typeglot init
+   ```
+3. **Start dev mode** (in terminal):
+   ```bash
+   npx typeglot dev
+   ```
+4. **Write code** with translation keys — see inline previews instantly!
+
+## Learn More
+
+- 📖 [Documentation](https://typeglot.dev)
+- 🐛 [Report Issues](https://github.com/markusahlstrand/typeglot/issues)
+- ⭐ [Star on GitHub](https://github.com/markusahlstrand/typeglot)
 
 ## License
 
-MIT
+MIT © [TypeGlot](https://typeglot.dev)

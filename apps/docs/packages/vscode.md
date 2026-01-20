@@ -4,9 +4,19 @@ The VS Code extension provides in-editor features for working with TypeGlot tran
 
 ## Installation
 
-### From Marketplace
+### Direct Download
 
-Search for "TypeGlot" in the VS Code Extensions view.
+<a href="/typeglot-vscode-0.1.0.vsix" download class="vp-button">
+  ⬇️ Download TypeGlot v0.1.0 (.vsix)
+</a>
+
+<br/><br/>
+
+To install: Open VS Code → Command Palette (`Cmd/Ctrl + Shift + P`) → "Extensions: Install from VSIX..." → Select the downloaded file.
+
+### From VS Code Marketplace
+
+Search for "TypeGlot" in the VS Code Extensions view (`Cmd/Ctrl + Shift + X`).
 
 ### From Source
 

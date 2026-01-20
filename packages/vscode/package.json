@@ -1,14 +1,28 @@
 {
   "name": "typeglot-vscode",
-  "displayName": "TypeGlot",
-  "description": "Git-native internationalization toolchain with inline translation preview and AI-powered translations",
+  "displayName": "TypeGlot - Type-Safe i18n",
+  "description": "The only i18n solution with full TypeScript support. Git-native translations with inline previews, AI-powered translation via GitHub Copilot, and zero sync anxiety.",
   "version": "0.1.0",
-  "publisher": "typeglot",
+  "publisher": "MarkusAhlstrand",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0ea5e9",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markusahlstrand/typeglot"
+  },
+  "homepage": "https://typeglot.dev",
+  "bugs": {
+    "url": "https://github.com/markusahlstrand/typeglot/issues"
+  },
   "engines": {
-    "vscode": "^1.90.0"
+    "vscode": "^1.108.0"
   },
   "categories": [
     "Programming Languages",
+    "Linters",
     "Other"
   ],
   "activationEvents": [
@@ -148,10 +162,8 @@
     "clean": "rm -rf dist",
     "package": "vsce package --no-dependencies"
   },
-  "dependencies": {
-    "@typeglot/core": "workspace:*"
-  },
   "devDependencies": {
+    "@typeglot/core": "workspace:^",
     "@types/vscode": "^1.108.1",
     "esbuild": "^0.27.2",
     "@vscode/vsce": "^3.7.1"
@@ -159,10 +171,16 @@
   "keywords": [
     "i18n",
     "internationalization",
+    "localization",
+    "l10n",
     "typescript",
     "translations",
-    "vscode",
-    "ai"
+    "translate",
+    "ai",
+    "copilot",
+    "intl",
+    "multilingual",
+    "language"
   ],
   "license": "MIT"
 }
