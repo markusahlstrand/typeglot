@@ -14,14 +14,88 @@ This guide will help you set up TypeGlot in your project in under 5 minutes.
 The fastest way to get started is using the CLI:
 
 ```bash
-npx typeglot init
+npx @typeglot/cli init
 ```
+
+The init command is smart:
+
+- **Detects existing locale files** in common locations (`locales/`, `src/locales/`, `src/i18n/`, etc.)
+- **Detects monorepos** (pnpm workspaces, npm/yarn workspaces) and lets you choose which packages to initialize
+- **Asks which locale is your source** if multiple locales are found
 
 This creates:
 
 - `typeglot.config.json` — Configuration file
-- `locales/en.json` — Source translation file with examples
+- `locales/en.json` — Source translation file with examples (if no existing locales found)
 - `src/generated/i18n/` — Output directory for generated TypeScript
+
+### Monorepo Support
+
+In a monorepo, the CLI will detect your workspace and offer options:
+
+```
+🌐 Initializing TypeGlot...
+
+📦 Detected monorepo with packages:
+
+? Where would you like to initialize TypeGlot?
+  ❯ Root (shared translations)
+    Specific packages
+
+? Select packages to initialize:
+  ◯ @myapp/frontend
+  ◯ @myapp/backend
+  ◯ @myapp/mobile
+```
+
+Choose **Root** if all packages share the same translations, or **Specific packages** to initialize each package independently.
+
+### Existing Projects
+
+If you already have translation files, TypeGlot will find them:
+
+```
+📂 Found existing locale files in src/locales/
+   Locales: en, es, de
+
+? Use existing locales directory (src/locales/)? Yes
+? Which locale is your source (primary) locale? en
+```
+
+## What Gets Created
+
+After running `typeglot init`, your project structure looks like this:
+
+```
+your-project/
+├── typeglot.config.json     # Configuration file
+├── locales/                  # Translation source files
+│   └── en.json              # Source locale
+└── src/generated/i18n/      # Generated TypeScript
+    ├── index.ts             # Main exports + locale types
+    ├── messages.ts          # Typed translation functions
+    ├── en.ts                # English messages
+    └── es.ts                # Spanish messages (etc.)
+```
+
+### What to Commit vs Gitignore
+
+| File                   | Commit to Git? | Bundled in Production? | Description                    |
+| ---------------------- | -------------- | ---------------------- | ------------------------------ |
+| `typeglot.config.json` | ✅ Yes         | ❌ No                  | Configuration for the compiler |
+| `locales/*.json`       | ✅ Yes         | ❌ No                  | Source translation files       |
+| `src/generated/i18n/*` | ❌ No          | ✅ Yes                 | Generated TypeScript code      |
+
+Add to your `.gitignore`:
+
+```gitignore
+# TypeGlot generated files
+src/generated/i18n/
+```
+
+::: tip Zero Runtime Dependencies
+The generated TypeScript code is **completely self-contained**. Your production bundle includes only the generated functions — no `@typeglot/*` packages, no JSON files, no external dependencies.
+:::
 
 ### Manual Installation
 
@@ -61,7 +135,7 @@ Create your source translation file `locales/en.json`:
 Compile your translations to TypeScript:
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 This generates typed functions in `src/generated/i18n/`:

@@ -9,7 +9,7 @@ The CLI package provides command-line tools for managing TypeGlot projects.
 npm install -g @typeglot/cli
 
 # Or use with npx
-npx typeglot <command>
+npx @typeglot/cli <command>
 
 # Or as dev dependency
 npm install -D @typeglot/cli
@@ -22,7 +22,7 @@ npm install -D @typeglot/cli
 Initialize TypeGlot in a new project:
 
 ```bash
-npx typeglot init
+npx @typeglot/cli init
 ```
 
 Options:
@@ -36,7 +36,7 @@ Example:
 
 ```bash
 # Initialize with Spanish as source
-npx typeglot init --locale es --dir ./translations
+npx @typeglot/cli init --locale es --dir ./translations
 ```
 
 This creates:
@@ -50,7 +50,7 @@ This creates:
 Compile translation files to TypeScript:
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 Options:
@@ -64,13 +64,13 @@ Examples:
 
 ```bash
 # Single build
-npx typeglot build
+npx @typeglot/cli build
 
 # Watch mode
-npx typeglot build --watch
+npx @typeglot/cli build --watch
 
 # Verbose output
-npx typeglot build --verbose
+npx @typeglot/cli build --verbose
 ```
 
 ### typeglot dev
@@ -78,7 +78,7 @@ npx typeglot build --verbose
 Start development mode with file watching and local UI:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 Options:
@@ -92,13 +92,13 @@ Examples:
 
 ```bash
 # Default port
-npx typeglot dev
+npx @typeglot/cli dev
 
 # Custom port
-npx typeglot dev --port 4000
+npx @typeglot/cli dev --port 4000
 
 # Without UI
-npx typeglot dev --no-ui
+npx @typeglot/cli dev --no-ui
 ```
 
 ### typeglot translate
@@ -106,7 +106,7 @@ npx typeglot dev --no-ui
 Generate translations using AI:
 
 ```bash
-npx typeglot translate
+npx @typeglot/cli translate
 ```
 
 Options:
@@ -121,16 +121,16 @@ Examples:
 
 ```bash
 # Translate all missing keys
-npx typeglot translate
+npx @typeglot/cli translate
 
 # Translate to specific locales
-npx typeglot translate --target es fr de
+npx @typeglot/cli translate --target es fr de
 
 # Translate a specific key
-npx typeglot translate --key checkout_button
+npx @typeglot/cli translate --key checkout_button
 
 # Dry run
-npx typeglot translate --dry-run
+npx @typeglot/cli translate --dry-run
 ```
 
 ## Programmatic Usage
@@ -211,8 +211,8 @@ TypeGlot initialized successfully! 🎉
 
 Next steps:
   1. Add translations to locales/en.json
-  2. Run npx typeglot build to generate TypeScript
-  3. Run npx typeglot dev to start development mode
+  2. Run npx @typeglot/cli build to generate TypeScript
+  3. Run npx @typeglot/cli dev to start development mode
 ```
 
 ### typeglot build

@@ -27,9 +27,9 @@ Start writing code, add translations later:
 3. **Run build or dev mode**:
 
    ```bash
-   npx typeglot build  # One-time build
+   npx @typeglot/cli build  # One-time build
    # OR
-   npx typeglot dev    # Watch mode
+   npx @typeglot/cli dev    # Watch mode
    ```
 
 4. **TypeScript functions are generated**:
@@ -43,7 +43,7 @@ Start writing code, add translations later:
 
 5. **Use AI to translate** (optional):
    ```bash
-   npx typeglot translate
+   npx @typeglot/cli translate
    ```
    The AI reads your JSDoc comment and creates context-aware translations in all target locales.
 
@@ -54,7 +54,7 @@ Prefer a visual interface? Use the local dashboard:
 1. **Start dev mode**:
 
    ```bash
-   npx typeglot dev
+   npx @typeglot/cli dev
    ```
 
 2. **Open the dashboard**:
@@ -218,7 +218,7 @@ For a typical app using 50 translations out of 500:
 In `dev` mode, TypeGlot watches your `locales/` directory:
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 # Watching for changes in ./locales
 ```
 
@@ -246,7 +246,7 @@ Total time: **< 100ms** for most projects.
 For production, run:
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
 This:

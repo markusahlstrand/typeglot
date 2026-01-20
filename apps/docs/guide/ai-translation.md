@@ -61,7 +61,7 @@ Reference them in the config:
 ### Translate All Missing Keys
 
 ```bash
-npx typeglot translate
+npx @typeglot/cli translate
 ```
 
 This will:
@@ -75,14 +75,14 @@ This will:
 ### Translate Specific Keys
 
 ```bash
-npx typeglot translate --key checkout_button
-npx typeglot translate --key "user.*"  # Glob patterns
+npx @typeglot/cli translate --key checkout_button
+npx @typeglot/cli translate --key "user.*"  # Glob patterns
 ```
 
 ### Translate to Specific Locales
 
 ```bash
-npx typeglot translate --target es fr
+npx @typeglot/cli translate --target es fr
 ```
 
 ### Dry Run
@@ -90,7 +90,7 @@ npx typeglot translate --target es fr
 Preview what would be translated without making changes:
 
 ```bash
-npx typeglot translate --dry-run
+npx @typeglot/cli translate --dry-run
 ```
 
 ## Context Extraction
@@ -179,13 +179,13 @@ AI translations should always be reviewed. TypeGlot supports this workflow:
 ### 1. Generate Draft Translations
 
 ```bash
-npx typeglot translate --target es
+npx @typeglot/cli translate --target es
 ```
 
 ### 2. Review in Dashboard
 
 ```bash
-npx typeglot dev
+npx @typeglot/cli dev
 ```
 
 Open `http://localhost:3333` to review and edit translations.
@@ -220,7 +220,7 @@ jobs:
         run: npm install
 
       - name: Translate missing keys
-        run: npx typeglot translate
+        run: npx @typeglot/cli translate
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 

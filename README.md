@@ -22,19 +22,40 @@ TypeGlot is designed to replace cloud-based i18n services. Its core philosophy i
 | [`@typeglot/ui`](./packages/ui)             | Local React-based dashboard for managing translations            |
 | [`@typeglot/vscode`](./packages/vscode)     | VS Code extension for in-editor experiences                      |
 
+> **Note:** TypeGlot is a **dev dependency only**. The generated code has **zero runtime dependencies** — nothing from `@typeglot/*` is bundled into your production app.
+
 ## 🚀 Quick Start
 
 ### Initialize a new project
 
 ```bash
-npx typeglot init
+npx @typeglot/cli init
 ```
+
+The init command is smart:
+
+- **Detects existing locale files** in common locations (`locales/`, `src/locales/`, `src/i18n/`, etc.)
+- **Detects monorepos** (pnpm workspaces, npm/yarn workspaces) and lets you choose which packages to initialize
+- **Asks which locale is your source** if multiple locales are found
 
 This creates:
 
-- `typeglot.config.json` — Configuration file
-- `locales/en.json` — Source translation file
-- `src/generated/i18n/` — Output directory for generated TypeScript
+```
+your-project/
+├── typeglot.config.json     # Configuration (commit to git)
+├── locales/
+│   └── en.json              # Source translations (commit to git)
+└── src/generated/i18n/      # Generated TypeScript (gitignore this)
+    ├── index.ts
+    ├── messages.ts
+    └── en.ts
+```
+
+**Add to `.gitignore`:**
+
+```gitignore
+src/generated/i18n/
+```
 
 ### Add translations
 

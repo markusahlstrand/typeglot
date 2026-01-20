@@ -41,11 +41,11 @@ features:
 
 ```bash
 # TypeGlot in Ihrem Projekt initialisieren
-npx typeglot init
+npx @typeglot/cli init
 
 # Typisierte Übersetzungen kompilieren
-npx typeglot build
+npx @typeglot/cli build
 
 # Entwicklungsmodus starten
-npx typeglot dev
+npx @typeglot/cli dev
 ```

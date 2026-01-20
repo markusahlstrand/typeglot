@@ -50,10 +50,10 @@ jobs:
         run: npm ci
 
       - name: Build translations
-        run: npx typeglot build
+        run: npx @typeglot/cli build
 
       - name: Check for missing keys
-        run: npx typeglot check
+        run: npx @typeglot/cli check
 ```
 
 ### Auto-Translate on Push
@@ -89,7 +89,7 @@ jobs:
         run: npm ci
 
       - name: Translate missing keys
-        run: npx typeglot translate
+        run: npx @typeglot/cli translate
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -144,9 +144,9 @@ jobs:
 
       - name: Check translation coverage
         run: |
-          npx typeglot check --coverage 100 || {
+          npx @typeglot/cli check --coverage 100 || {
             echo "❌ Missing translations detected"
-            echo "Run 'npx typeglot translate' to generate missing translations"
+            echo "Run 'npx @typeglot/cli translate' to generate missing translations"
             exit 1
           }
 ```
@@ -164,8 +164,8 @@ validate-translations:
   image: node:20
   script:
     - npm ci
-    - npx typeglot build
-    - npx typeglot check
+    - npx @typeglot/cli build
+    - npx @typeglot/cli check
   rules:
     - changes:
         - locales/**
@@ -176,7 +176,7 @@ auto-translate:
   image: node:20
   script:
     - npm ci
-    - npx typeglot translate
+    - npx @typeglot/cli translate
     - |
       if git diff --quiet locales/; then
         echo "No new translations"
@@ -209,7 +209,7 @@ npx husky init
 // package.json
 {
   "lint-staged": {
-    "locales/*.json": ["npx typeglot build", "git add src/generated/i18n"]
+    "locales/*.json": ["npx @typeglot/cli build", "git add src/generated/i18n"]
   }
 }
 ```
@@ -240,42 +240,42 @@ Settings → CI/CD → Variables → Add variable
 
 ## CLI Commands for CI
 
-### `typeglot build`
+### `@typeglot/cli build`
 
 Compile translations. Fails if JSON is invalid.
 
 ```bash
-npx typeglot build
+npx @typeglot/cli build
 ```
 
-### `typeglot check`
+### `@typeglot/cli check`
 
 Validate translation coverage.
 
 ```bash
 # Check all locales have all keys
-npx typeglot check
+npx @typeglot/cli check
 
 # Require 100% coverage
-npx typeglot check --coverage 100
+npx @typeglot/cli check --coverage 100
 
 # Check specific locales
-npx typeglot check --locales es fr
+npx @typeglot/cli check --locales es fr
 ```
 
-### `typeglot translate`
+### `@typeglot/cli translate`
 
 Generate missing translations.
 
 ```bash
 # Translate all missing
-npx typeglot translate
+npx @typeglot/cli translate
 
 # Dry run (no changes)
-npx typeglot translate --dry-run
+npx @typeglot/cli translate --dry-run
 
 # Specific locales
-npx typeglot translate --target es fr
+npx @typeglot/cli translate --target es fr
 ```
 
 ## Best Practices
